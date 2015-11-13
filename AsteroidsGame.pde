@@ -1,15 +1,112 @@
-//your variable declarations here
+SpaceShip juan = new SpaceShip();
+Stars [] field;
+boolean wIsPressed = false;
+boolean sIsPressed = false;
+boolean aIsPressed = false;
+boolean dIsPressed = false;
 public void setup() 
 {
-  //your code here
+  size(600,600);
+  background(0);
+  field = new Stars[100];
+  for(int i = 0; i < field.length; i++)
+  {
+    field[i] = new Stars();
+  }
 }
 public void draw() 
 {
-  //your code here
+  background(0);
+  for(int i = 0; i < field.length; i++)
+  {
+    field[i].move();
+    field[i].show();
+  }
+  juan.move();
+  juan.show();
+  if(wIsPressed == true)
+  {
+    juan.accelerate(.04); 
+  }
+  if(sIsPressed == true)
+  {
+    juan.accelerate(-.04);
+  }
+  if(aIsPressed == true)
+  {
+    juan.rotate(-5);
+  }
+  if(dIsPressed == true)
+  {
+    juan.rotate(5);
+  }
 }
-class SpaceShip //extends Floater  
-{   
-    //your code here
+void keyPressed()
+{
+  if(key == 'w' || keyCode == UP)
+  {
+    wIsPressed = true;
+  }
+  if(key == 's' || keyCode == DOWN)
+  {
+    sIsPressed = true;
+  }
+  if(key == 'a' || keyCode == LEFT)
+  {
+    aIsPressed = true;
+  }
+  if(key == 'd' || keyCode == RIGHT)
+  {
+    dIsPressed = true;
+  }
+}
+void keyReleased()
+{
+  if(key == 'w' || keyCode == UP)
+  {
+    wIsPressed = false;
+  }
+  if(key == 's' || keyCode == DOWN)
+  {
+    sIsPressed = false;
+  }
+  if(key == 'a' || keyCode == LEFT)
+  {
+    aIsPressed = false;
+  }
+  if(key == 'd' || keyCode == RIGHT)
+  {
+    dIsPressed = false;
+  }
+}
+class SpaceShip extends Floater  
+{  
+  public SpaceShip()
+  {
+    corners = 4;
+    xCorners = new int[corners];
+    yCorners = new int[corners];
+    int[] tx = {20,-6,0,-6};
+    int[] ty = {0,-10,0,10};
+    xCorners = tx;
+    yCorners = ty;
+    myColor = 255;
+    myCenterX = 300;
+    myCenterY = 450;
+    myDirectionX = 0;
+    myDirectionY = 0;
+    myPointDirection = 270;
+  } 
+  public void setX(int x){myCenterX = x;}  
+  public int getX(){return (int)myCenterX;}   
+  public void setY(int y){myCenterY = y;}  
+  public int getY(){return (int)myCenterY;}   
+  public void setDirectionX(double x){myDirectionX = x;}   
+  public double getDirectionX(){return myDirectionX;}   
+  public void setDirectionY(double y){myDirectionY = y;}
+  public double getDirectionY(){return myDirectionY;}   
+  public void setPointDirection(int degrees){myPointDirection = degrees;}   
+  public double getPointDirection(){return myPointDirection;} 
 }
 abstract class Floater //Do NOT modify the Floater class! Make changes in the SpaceShip class 
 {   
@@ -87,4 +184,30 @@ abstract class Floater //Do NOT modify the Floater class! Make changes in the Sp
     endShape(CLOSE);  
   }   
 } 
+class Stars 
+{
+  private double x,y,speed,angle;
+  private int colour, size;
+  public Stars()
+  {
+    x = Math.random()*600;
+    y = Math.random()*600;
+    size = ((int)Math.random()*2)+2;
+    speed = Math.random()/20;
+    colour = (int)(Math.random()*205 + 50);
+    angle = Math.random()*2*PI;
+  }
+  public void show()
+  {
+    noStroke();
+    fill(colour);
+    ellipse((float)x,(float)y,size,size);
+  }
+  public void move()
+  {
+    x = x + Math.cos(angle)*speed;
+    y = y + Math.sin(angle)*speed;
+  }
+}
+
 
