@@ -59,6 +59,10 @@ void keyPressed()
   {
     dIsPressed = true;
   }
+  if(key == 'h')
+  {
+    juan.HyperSpace();
+  }
 }
 void keyReleased()
 {
@@ -107,6 +111,12 @@ class SpaceShip extends Floater
   public double getDirectionY(){return myDirectionY;}   
   public void setPointDirection(int degrees){myPointDirection = degrees;}   
   public double getPointDirection(){return myPointDirection;} 
+  public void HyperSpace()
+  {
+    myPointDirection = Math.random()*360;
+    myCenterX = Math.random()*500 + 50;
+    myCenterY = Math.random()*500 + 50;
+  }
 }
 abstract class Floater //Do NOT modify the Floater class! Make changes in the SpaceShip class 
 {   
