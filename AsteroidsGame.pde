@@ -116,6 +116,8 @@ class SpaceShip extends Floater
     myPointDirection = Math.random()*360;
     myCenterX = Math.random()*500 + 50;
     myCenterY = Math.random()*500 + 50;
+    myDirectionX = 0;
+    myDirectionY = 0;
   }
 }
 abstract class Floater //Do NOT modify the Floater class! Make changes in the SpaceShip class 
