@@ -1,14 +1,23 @@
 SpaceShip juan = new SpaceShip();
+Asteroid john = new Asteroid();
 Stars [] field;
 boolean wIsPressed = false;
 boolean sIsPressed = false;
 boolean aIsPressed = false;
 boolean dIsPressed = false;
+PImage poop;
+PImage ship;
+PImage fire;
+PImage sfire;
 public void setup() 
 {
   size(600,600);
   background(0);
-  field = new Stars[100];
+  poop = loadImage("poop.jpg");
+  ship = loadImage("SmallSpaceship.png");
+  fire = loadImage("fire.png");
+  sfire = loadImage("smallfire.png");
+  field = new Stars[300];
   for(int i = 0; i < field.length; i++)
   {
     field[i] = new Stars();
@@ -17,28 +26,31 @@ public void setup()
 public void draw() 
 {
   background(0);
+  image(poop,0,0,600,600);
   for(int i = 0; i < field.length; i++)
   {
     field[i].move();
     field[i].show();
   }
+  john.move();
+  john.show();
   juan.move();
   juan.show();
   if(wIsPressed == true)
   {
-    juan.accelerate(.04); 
+    juan.accelerate(.07); 
   }
   if(sIsPressed == true)
   {
-    juan.accelerate(-.04);
+    juan.accelerate(-.03);
   }
   if(aIsPressed == true)
   {
-    juan.rotate(-5);
+    juan.turn(-4);
   }
   if(dIsPressed == true)
   {
-    juan.rotate(5);
+    juan.turn(4);
   }
 }
 void keyPressed()
@@ -83,18 +95,54 @@ void keyReleased()
     dIsPressed = false;
   }
 }
+class Asteroid extends Floater
+{
+  private int rotationSpeed;
+  public Asteroid()
+  {
+    rotationSpeed = ((int)Math.random()*5 - 2);
+    corners = 4;  //the number of corners, a triangular floater has 3   
+    xCorners = new int[corners];   
+    yCorners = new int[corners];
+    int [] tx = {-5,5,5,-5};
+    int [] ty = {-5,-5,5,5};
+    xCorners = tx;
+    yCorners = ty;    
+    myColor = 255;   
+    myCenterX = 300; 
+    myCenterY = 300; //holds center coordinates   
+    myDirectionX = 0; 
+    myDirectionY = 0; //holds x and y coordinates of the vector for direction of travel     
+    myPointDirection = 0;
+  }
+  public void setX(int x){myCenterX = x;}  
+  public int getX(){return (int)myCenterX;}   
+  public void setY(int y){myCenterY = y;}  
+  public int getY(){return (int)myCenterY;}   
+  public void setDirectionX(double x){myDirectionX = x;}   
+  public double getDirectionX(){return myDirectionX;}   
+  public void setDirectionY(double y){myDirectionY = y;}
+  public double getDirectionY(){return myDirectionY;}   
+  public void setPointDirection(int degrees){myPointDirection = degrees;}   
+  public double getPointDirection(){return myPointDirection;} 
+  public void move()
+  {
+    super.move();
+    myPointDirection += rotationSpeed;
+  } 
+}
 class SpaceShip extends Floater  
 {  
   public SpaceShip()
   {
-    corners = 4;
+    /*corners = 4;
     xCorners = new int[corners];
     yCorners = new int[corners];
-    int[] tx = {20,-6,0,-6};
-    int[] ty = {0,-10,0,10};
+    int[] tx = {40,-12,0,-12};
+    int[] ty = {0,-20,0,20};
     xCorners = tx;
     yCorners = ty;
-    myColor = 255;
+    myColor = 255;*/
     myCenterX = 300;
     myCenterY = 450;
     myDirectionX = 0;
@@ -118,6 +166,40 @@ class SpaceShip extends Floater
     myCenterY = Math.random()*500 + 50;
     myDirectionX = 0;
     myDirectionY = 0;
+  }
+  public void show()
+  {
+    super.show();
+    double dRadians = myPointDirection*(Math.PI/180);
+    translate((int)myCenterX,(int)myCenterY);
+    rotate((float)(dRadians - (270*(Math.PI/180))));
+    if(wIsPressed == true)
+    {
+      image(fire,0,40,10,31);
+      image(fire,-11,40,10,31);
+    }
+    if(aIsPressed == true)
+    {
+      rotate((float)Math.PI/2);
+      image(sfire,25,15,5,15);
+      rotate((float)-Math.PI/2);
+    }
+    if(dIsPressed == true)
+    {
+      rotate((float)-Math.PI/2);
+      image(sfire,-30,15,5,15);
+      rotate((float)Math.PI/2);
+    }
+    if(sIsPressed == true)
+    {
+      rotate((float)-Math.PI);
+      image(sfire,-2,25,5,15);
+      rotate((float)Math.PI);
+    }
+    image(ship,-21,-30,42,80);
+    rotate(-(float)(dRadians -(270*(Math.PI/180))));
+    translate(-(int)myCenterX,-(int)myCenterY);
+
   }
 }
 abstract class Floater //Do NOT modify the Floater class! Make changes in the SpaceShip class 
@@ -149,7 +231,7 @@ abstract class Floater //Do NOT modify the Floater class! Make changes in the Sp
     myDirectionX += ((dAmount) * Math.cos(dRadians));    
     myDirectionY += ((dAmount) * Math.sin(dRadians));       
   }   
-  public void rotate (int nDegreesOfRotation)   
+  public void turn (int nDegreesOfRotation)   
   {     
     //rotates the floater by a given number of degrees    
     myPointDirection+=nDegreesOfRotation;   
@@ -204,9 +286,9 @@ class Stars
   {
     x = Math.random()*600;
     y = Math.random()*600;
-    size = ((int)Math.random()*2)+2;
-    speed = Math.random()/20;
-    colour = (int)(Math.random()*205 + 50);
+    size = ((int)Math.random()*5)+2;
+    speed = Math.random()/15;
+    colour = (int)(Math.random()*215 + 40);
     angle = Math.random()*2*PI;
   }
   public void show()
