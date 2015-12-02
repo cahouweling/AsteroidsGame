@@ -1,5 +1,5 @@
 SpaceShip juan = new SpaceShip();
-Asteroid john = new Asteroid();
+Asteroid [] afield;
 Stars [] field;
 boolean wIsPressed = false;
 boolean sIsPressed = false;
@@ -9,6 +9,10 @@ PImage poop;
 PImage ship;
 PImage fire;
 PImage sfire;
+PImage ast1;
+PImage ast2;
+PImage ast3;
+PImage ast4;
 public void setup() 
 {
   size(600,600);
@@ -17,7 +21,16 @@ public void setup()
   ship = loadImage("SmallSpaceship.png");
   fire = loadImage("fire.png");
   sfire = loadImage("smallfire.png");
+  ast1 = loadImage("Asteroid 1.png");
+  ast2 = loadImage("Asteroid 2.png");
+  ast3 = loadImage("Asteroid 3.png");
+  ast4 = loadImage("Asteroid 4.png");
   field = new Stars[300];
+  afield = new Asteroid[10];
+  for(int i = 0; i < afield.length; i++)
+  {
+    afield[i] = new Asteroid();
+  }
   for(int i = 0; i < field.length; i++)
   {
     field[i] = new Stars();
@@ -27,13 +40,16 @@ public void draw()
 {
   background(0);
   image(poop,0,0,600,600);
+  for(int i = 0; i < afield.length; i++)
+  {
+    afield[i].move();
+    afield[i].show();
+  }
   for(int i = 0; i < field.length; i++)
   {
     field[i].move();
     field[i].show();
   }
-  john.move();
-  john.show();
   juan.move();
   juan.show();
   if(wIsPressed == true)
@@ -97,22 +113,23 @@ void keyReleased()
 }
 class Asteroid extends Floater
 {
-  private int rotationSpeed;
+  private int rotationSpeed,type;
   public Asteroid()
   {
-    rotationSpeed = ((int)Math.random()*5 - 2);
-    corners = 4;  //the number of corners, a triangular floater has 3   
+    rotationSpeed = ((int)(Math.random()*9) - 4);
+    type = ((int)(Math.random()*4));
+    /*corners = 4;  //the number of corners, a triangular floater has 3   
     xCorners = new int[corners];   
     yCorners = new int[corners];
     int [] tx = {-5,5,5,-5};
     int [] ty = {-5,-5,5,5};
     xCorners = tx;
     yCorners = ty;    
-    myColor = 255;   
-    myCenterX = 300; 
-    myCenterY = 300; //holds center coordinates   
-    myDirectionX = 0; 
-    myDirectionY = 0; //holds x and y coordinates of the vector for direction of travel     
+    myColor = 255;*/   
+    myCenterX = ((int)(Math.random()*580) + 10); 
+    myCenterY = ((int)(Math.random()*580) + 10);   
+    myDirectionX = ((int)(Math.random()*5) - 2); 
+    myDirectionY = ((int)(Math.random()*5) - 2); //holds x and y coordinates of the vector for direction of travel     
     myPointDirection = 0;
   }
   public void setX(int x){myCenterX = x;}  
@@ -128,8 +145,44 @@ class Asteroid extends Floater
   public void move()
   {
     super.move();
+    if(myDirectionY == 0 && myDirectionX == 0)
+    {
+      myDirectionX = ((int)(Math.random()*5) - 2); 
+      myDirectionY = ((int)(Math.random()*5) - 2); 
+    }
+    if(rotationSpeed == 0)
+    {
+      rotationSpeed = ((int)(Math.random()*9) - 4);
+    }
+    System.out.println(rotationSpeed);
     myPointDirection += rotationSpeed;
   } 
+  public void show()
+  {
+    super.show();
+    double dRadians = myPointDirection*(Math.PI/180);
+    translate((int)myCenterX,(int)myCenterY);
+    rotate((float)(dRadians - (270*(Math.PI/180))));
+    if(type == 0)
+    {
+      image(ast1,-8,-8,16,16);
+    }
+    if(type == 1)
+    {
+      image(ast2,-8,-8,16,16);
+    }
+    if(type == 2)
+    {
+      image(ast3,-8,-8,16,16);
+    }
+    if(type == 3)
+    {
+      image(ast4,-8,-8,16,16);
+    }
+    rotate(-(float)(dRadians -(270*(Math.PI/180))));
+    translate(-(int)myCenterX,-(int)myCenterY);
+
+  }
 }
 class SpaceShip extends Floater  
 {  
