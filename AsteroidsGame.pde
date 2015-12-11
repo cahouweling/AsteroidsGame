@@ -1,10 +1,11 @@
 SpaceShip juan = new SpaceShip();
-Asteroid [] afield;
+ArrayList<Asteroid> alist = new ArrayList<Asteroid>();
 Stars [] field;
 boolean wIsPressed = false;
 boolean sIsPressed = false;
 boolean aIsPressed = false;
 boolean dIsPressed = false;
+boolean spaceIsPessed = false;
 PImage poop;
 PImage ship;
 PImage fire;
@@ -26,10 +27,9 @@ public void setup()
   ast3 = loadImage("Asteroid 3.png");
   ast4 = loadImage("Asteroid 4.png");
   field = new Stars[300];
-  afield = new Asteroid[10];
-  for(int i = 0; i < afield.length; i++)
+  for(int i = 0; i < 10; i++)
   {
-    afield[i] = new Asteroid();
+    alist.add(new Asteroid());
   }
   for(int i = 0; i < field.length; i++)
   {
@@ -40,10 +40,16 @@ public void draw()
 {
   background(0);
   image(poop,0,0,600,600);
-  for(int i = 0; i < afield.length; i++)
+  for(int i = 0; i < alist.size(); i++)
   {
-    afield[i].move();
-    afield[i].show();
+    alist.get(i).move(); 
+    alist.get(i).show();
+    float sd = dist(((int)alist.get(i).getX()),((int)alist.get(i).getY()),((int)juan.getX()),((int)juan.getY()));
+    System.out.println(sd);
+    if(sd < 40)
+    {
+      alist.remove(i);
+    }
   }
   for(int i = 0; i < field.length; i++)
   {
@@ -68,6 +74,10 @@ public void draw()
   {
     juan.turn(4);
   }
+  if(spaceIsPessed == true)
+  {
+    //juan.shoot();
+  }
 }
 void keyPressed()
 {
@@ -91,6 +101,10 @@ void keyPressed()
   {
     juan.HyperSpace();
   }
+  if(key == ' ')
+  {
+    spaceIsPessed = true;
+  }
 }
 void keyReleased()
 {
@@ -109,6 +123,10 @@ void keyReleased()
   if(key == 'd' || keyCode == RIGHT)
   {
     dIsPressed = false;
+  }
+  if(key == ' ')
+  {
+    spaceIsPessed = false;
   }
 }
 class Asteroid extends Floater
@@ -154,7 +172,6 @@ class Asteroid extends Floater
     {
       rotationSpeed = ((int)(Math.random()*9) - 4);
     }
-    System.out.println(rotationSpeed);
     myPointDirection += rotationSpeed;
   } 
   public void show()
@@ -212,6 +229,10 @@ class SpaceShip extends Floater
   public double getDirectionY(){return myDirectionY;}   
   public void setPointDirection(int degrees){myPointDirection = degrees;}   
   public double getPointDirection(){return myPointDirection;} 
+  public void shoot()
+  {
+    
+  }
   public void HyperSpace()
   {
     myPointDirection = Math.random()*360;
@@ -356,5 +377,3 @@ class Stars
     y = y + Math.sin(angle)*speed;
   }
 }
-
-
