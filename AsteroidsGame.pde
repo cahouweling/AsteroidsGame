@@ -1,5 +1,6 @@
 SpaceShip juan = new SpaceShip();
 ArrayList<Asteroid> alist = new ArrayList<Asteroid>();
+ArrayList<Bullet> blist = new ArrayList<Bullet>();
 Stars [] field;
 boolean wIsPressed = false;
 boolean sIsPressed = false;
@@ -45,12 +46,26 @@ public void draw()
     alist.get(i).move(); 
     alist.get(i).show();
     float sd = dist(((int)alist.get(i).getX()),((int)alist.get(i).getY()),((int)juan.getX()),((int)juan.getY()));
-    System.out.println(sd);
     if(sd < 40)
     {
       alist.remove(i);
     }
   }
+  for(int i = 0; i < blist.size(); i++)
+  {
+    blist.get(i).move(); 
+    blist.get(i).show();
+    for(int k = 0; k < alist.size(); k++)
+    {
+      float dis = dist(((int)alist.get(k).getX()),((int)alist.get(k).getY()),((int)blist.get(i).getX()),((int)blist.get(i).getY()));
+      if(dis < 5)
+      {
+        alist.remove(k);
+        blist.remove(i);
+        break;
+      }
+  }
+  }  
   for(int i = 0; i < field.length; i++)
   {
     field[i].move();
@@ -76,7 +91,7 @@ public void draw()
   }
   if(spaceIsPessed == true)
   {
-    //juan.shoot();
+    blist.add(new Bullet());
   }
 }
 void keyPressed()
@@ -127,6 +142,38 @@ void keyReleased()
   if(key == ' ')
   {
     spaceIsPessed = false;
+  }
+}
+class Bullet extends Floater
+{
+  public Bullet()
+  {
+    myCenterX = juan.getX(); 
+    myCenterY = juan.getY();  
+    myPointDirection = juan.getPointDirection(); 
+    double dRadians =myPointDirection*(Math.PI/180);
+    myDirectionX = 5 * Math.cos(dRadians)+ juan.getDirectionX(); 
+    myDirectionY = 5 * Math.sin(dRadians)+ juan.getDirectionY();     
+  }
+  public void setX(int x){myCenterX = x;}  
+  public int getX(){return (int)myCenterX;}   
+  public void setY(int y){myCenterY = y;}  
+  public int getY(){return (int)myCenterY;}   
+  public void setDirectionX(double x){myDirectionX = x;}   
+  public double getDirectionX(){return myDirectionX;}   
+  public void setDirectionY(double y){myDirectionY = y;}
+  public double getDirectionY(){return myDirectionY;}   
+  public void setPointDirection(int degrees){myPointDirection = degrees;}   
+  public double getPointDirection(){return myPointDirection;} 
+  public void show()
+  {
+    fill(255,0,0);
+    ellipse((float)myCenterX,(float)myCenterY,5,5);
+  }
+  public void move()
+  {
+    myCenterX += myDirectionX;
+    myCenterY += myDirectionY; 
   }
 }
 class Asteroid extends Floater
@@ -229,10 +276,6 @@ class SpaceShip extends Floater
   public double getDirectionY(){return myDirectionY;}   
   public void setPointDirection(int degrees){myPointDirection = degrees;}   
   public double getPointDirection(){return myPointDirection;} 
-  public void shoot()
-  {
-    
-  }
   public void HyperSpace()
   {
     myPointDirection = Math.random()*360;
